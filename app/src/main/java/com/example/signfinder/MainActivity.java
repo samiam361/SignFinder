@@ -40,12 +40,20 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_settings:
                 settingsActivity();
                 return true;
+            case R.id.about_settings:
+                aboutActivity();
+                return true;
         }
         return false;
     }
 
+    public void aboutActivity() {
+        Intent startAboutAct = new Intent(this, AboutActivity.class);
+        startActivity(startAboutAct);
+    }
+
     public void settingsActivity() {
-        Intent startSettingsAct = new Intent(this, SettingsPage.class);
+        Intent startSettingsAct = new Intent(this, SettingsActivity.class);
         startActivity(startSettingsAct);
     }
 
