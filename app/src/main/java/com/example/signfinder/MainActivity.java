@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.view.Menu;
@@ -29,11 +30,13 @@ public class MainActivity extends AppCompatActivity {
                     mTextMessage.setText(R.string.title_nearby);
                     setContentView(R.layout.activity_main);
                     nav = R.id.navigation;
+                    navSetUp();
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText(R.string.title_visited);
                     setContentView(R.layout.visited);
                     nav = R.id.navigation2;
+                    navSetUp();
                     return true;
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_search);
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
                     nav = R.id.navigation3;
                     searchSpin = (Spinner) findViewById(R.id.spinner);
                     popSpinner();
+                    navSetUp();
                     return true;
             }
             return false;
@@ -106,7 +110,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mTextMessage = (TextView) findViewById(R.id.message);
+        nav = R.id.navigation;
         navSetUp();
+        ListView listView = (ListView) findViewById(R.id.listviewNear);
     }
 
 }
