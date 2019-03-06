@@ -19,6 +19,7 @@
         android:layout_marginBottom="8dp"
         android:text="@string/username"
         android:textAlignment="center"
+        android:inputType="text"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -138,4 +139,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.637" />
+
+    <TextView
+        android:id="@+id/logInMessage"
+        android:layout_width="182dp"
+        android:layout_height="87dp"
+        android:text="TextView"
+        android:visibility="invisible"
+        tools:layout_editor_absoluteX="114dp"
+        tools:layout_editor_absoluteY="507dp" />
 </android.support.constraint.ConstraintLayout>
