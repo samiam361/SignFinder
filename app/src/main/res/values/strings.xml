@@ -42,8 +42,156 @@
 
     <string-array name="search_options">
         <item>Title</item>
-        <item>Town/City</item>
-        <item>Zip Code</item>
+        <item>City/County</item>
+        <item>District</item>
+    </string-array>
+
+    <string-array name="district_options">
+        <item>Bristol</item>
+        <item>Culpeper</item>
+        <item>Fredericksburg</item>
+        <item>Fredericksburg-Richmond</item>
+        <item>Hampton Roads</item>
+        <item>Lynchburg</item>
+        <item>NOVA</item>
+        <item>Richmond</item>
+        <item>Salem</item>
+        <item>Staunton</item>
+    </string-array>
+
+    <string-array name="city_county_options">
+        <item>Accomack</item>
+        <item>Albemarle</item>
+        <item>Alexandria</item>
+        <item>Alleghany</item>
+        <item>Amelia</item>
+        <item>Amherst</item>
+        <item>Appomattox</item>
+        <item>Arlington</item>
+        <item>Augusta</item>
+        <item>Bath</item>
+        <item>Bedford (County)</item>
+        <item>Bedford (Ind. City)</item>
+        <item>Bland</item>
+        <item>Botetourt</item>
+        <item>Bristol</item>
+        <item>Brunswick</item>
+        <item>Buchanan</item>
+        <item>Buckingham</item>
+        <item>Buena Vista</item>
+        <item>Campbell</item>
+        <item>Caroline</item>
+        <item>Carroll</item>
+        <item>Charles City</item>
+        <item>Charlotte</item>
+        <item>Charlottesville</item>
+        <item>Chesapeake</item>
+        <item>Chesterfield</item>
+        <item>Clarke</item>
+        <item>Colonial Heights</item>
+        <item>Covington</item>
+        <item>Craig</item>
+        <item>Culpeper</item>
+        <item>Cumberland</item>
+        <item>Danville</item>
+        <item>Dickenson</item>
+        <item>Dinwiddie</item>
+        <item>Emporia</item>
+        <item>Essex</item>
+        <item>Fairfax (County)</item>
+        <item>Fairfax (Ind. City)</item>
+        <item>Falls Church</item>
+        <item>Fauquier</item>
+        <item>Floyd</item>
+        <item>Fluvanna</item>
+        <item>Franklin (County)</item>
+        <item>Franklin (Ind. City)</item>
+        <item>Frederick</item>
+        <item>Fredericksburg</item>
+        <item>Galax</item>
+        <item>Giles</item>
+        <item>Gloucester</item>
+        <item>Goochland</item>
+        <item>Grayson</item>
+        <item>Greene</item>
+        <item>Greensville</item>
+        <item>Halifax</item>
+        <item>Hampton</item>
+        <item>Hanover</item>
+        <item>Harrisonburg</item>
+        <item>Henrico</item>
+        <item>Henry</item>
+        <item>Highland</item>
+        <item>Isle Of Wight</item>
+        <item>James City</item>
+        <item>King And Queen</item>
+        <item>King George</item>
+        <item>King William</item>
+        <item>Lancaster</item>
+        <item>Lee</item>
+        <item>Lexington</item>
+        <item>Loudoun</item>
+        <item>Louisa</item>
+        <item>Lunenburg</item>
+        <item>Lynchburg</item>
+        <item>Madison</item>
+        <item>Manassas</item>
+        <item>Martinsville</item>
+        <item>Mathews</item>
+        <item>Mecklenburg</item>
+        <item>Middlesex</item>
+        <item>Montgomery</item>
+        <item>Nelson</item>
+        <item>New Kent</item>
+        <item>Newport News</item>
+        <item>Norfolk</item>
+        <item>Northampton</item>
+        <item>Northumberland</item>
+        <item>Nottoway</item>
+        <item>Orange</item>
+        <item>Page</item>
+        <item>Patrick</item>
+        <item>Petersburg</item>
+        <item>Pittsylvania</item>
+        <item>Poquoson</item>
+        <item>Portsmouth</item>
+        <item>Powhatan</item>
+        <item>Prince Edward</item>
+        <item>Prince George</item>
+        <item>Prince William</item>
+        <item>Pulaski</item>
+        <item>Radford</item>
+        <item>Rappahannock</item>
+        <item>Richmond (County)</item>
+        <item>Richmond (Ind. City)</item>
+        <item>Roanoke (County)</item>
+        <item>Roanoke (Ind. City)</item>
+        <item>Rockbridge</item>
+        <item>Rockingham</item>
+        <item>Russell</item>
+        <item>Salem</item>
+        <item>Scott</item>
+        <item>Shenandoah</item>
+        <item>Smyth</item>
+        <item>South Boston</item>
+        <item>Southampton</item>
+        <item>Spotsylvania</item>
+        <item>Stafford</item>
+        <item>Staunton</item>
+        <item>Suffolk</item>
+        <item>Surry</item>
+        <item>Sussex</item>
+        <item>Tazewell</item>
+        <item>Virginia Beach</item>
+        <item>Warren</item>
+        <item>Washington</item>
+        <item>Waynesboro</item>
+        <item>Westmoreland</item>
+        <item>Williamsburg</item>
+        <item>Winchester</item>
+        <item>Wise</item>
+        <item>Wythe</item>
+        <item>York</item>
     </string-array>
 
 
@@ -93,4 +241,5 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="title_activity_list_item_click">ListItemClickActivity</string>
 </resources>

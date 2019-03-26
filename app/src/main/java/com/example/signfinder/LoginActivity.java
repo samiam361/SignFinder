@@ -44,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
         uName = username.getText().toString();
         pWord = password.getText().toString();
         signIn = 1;
+
+        new LoginAsync().execute(uName, pWord);
     }
 
     public void mainActivity() {
@@ -139,6 +141,10 @@ public class LoginActivity extends AppCompatActivity {
                             in = new BufferedReader(new
                                     InputStreamReader(response.getEntity().getContent()));
 
+                            logInMessage = "Account creation successful! Please log in.";
+                            message.setText(logInMessage);
+                            message.setVisibility(View.VISIBLE);
+
 
                         }
                         catch(Exception e) {
@@ -149,7 +155,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                     else {
-                        //username already in user
+                        logInMessage = "Username already in use. Please choose another.";
+                        message.setText(logInMessage);
+                        message.setVisibility(View.VISIBLE);
                     }
 
 
@@ -167,7 +175,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     dbUName = (String)arg0[0];
                     dbPWord = (String)arg0[1];
-                    String link = "http://ec2-18-219-194-235.us-east-2.compute.amazonaws.com/db_signInCheck.php?username="+dbUName+"&password="+dbPWord;
+                    String link = "http://ec2-18-219-194-235.us-east-2.compute.amazonaws.com/db_logIn.php?username="+dbUName+"&password="+dbPWord;
 
                     URL url = new URL(link);
                     HttpClient client = new DefaultHttpClient();
@@ -187,6 +195,25 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     resultS = sb.toString();
+
+                    if(resultS.equals(" 1 ") == true) {
+                        try {
+
+
+                            mainActivity();
+
+                        }
+                        catch(Exception e) {
+                            logInMessage = e.getMessage();
+                            message.setText(logInMessage);
+                            message.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    else {
+                        logInMessage = "Username or Password Incorrect";
+                        message.setText(logInMessage);
+                        message.setVisibility(View.VISIBLE);
+                    }
 
 
                     return resultS;
