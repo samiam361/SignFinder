@@ -67,8 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         Button signUp = (Button)findViewById(R.id.signUpButton);
         Button logIn = (Button)findViewById(R.id.logInButton);
 
-        message = (TextView)findViewById(R.id.logInMessage);
-        message.setVisibility(View.INVISIBLE);
+        message.setText("Choose Login or Sign Up");
 
         signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -196,10 +195,10 @@ public class LoginActivity extends AppCompatActivity {
 
                     resultS = sb.toString();
 
-                    if(resultS.equals(" 1 ") == true) {
+                    if(resultS.equals(" "+uName+" ") == true) {
                         try {
 
-
+                            MainActivity.userName = uName;
                             mainActivity();
 
                         }

@@ -14,6 +14,8 @@
     <string name="password">Password</string>
     <string name="signUpButton">Sign Up</string>
     <string name="logInButton">Log In</string>
+    <string name="channel_name">New Sign!</string>
+    <string name="channel_description">New Sign!</string>
 
     <!-- Strings related to Settings -->
 
@@ -41,7 +43,7 @@
     </string-array>
 
     <string-array name="search_options">
-        <item>Title</item>
+        <item>Keyword</item>
         <item>City/County</item>
         <item>District</item>
     </string-array>

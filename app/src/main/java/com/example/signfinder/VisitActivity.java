@@ -32,18 +32,20 @@ import static com.example.signfinder.MainActivity.nearbyMessage;
 import static com.example.signfinder.MainActivity.nearbyView;
 import static com.example.signfinder.MainActivity.signList;
 import static com.example.signfinder.MainActivity.signsView;
+import static com.example.signfinder.MainActivity.userName;
 import static com.example.signfinder.MainActivity.visitList;
+import static com.example.signfinder.MainActivity.visitView;
 
-public class NearbyActivity extends AsyncTask<String, String, Void> {
+public class VisitActivity extends AsyncTask<String, String, Void> {
 
-    public String signInfo, latitude, longitude, file, username;
+    public String signInfo, latitude, longitude, file;
     private Context context;
 
-    public NearbyActivity() {
+    public VisitActivity() {
 
     }
 
-    public NearbyActivity(Context context) {
+    public VisitActivity(Context context) {
         this.context = context;
     }
 
@@ -54,12 +56,9 @@ public class NearbyActivity extends AsyncTask<String, String, Void> {
     @Override
     protected Void doInBackground(String... arg0) {
         try {
-            nearbyList.clear();
+            visitList.clear();
             file = (String)arg0[0];
-            latitude = (String)arg0[1];
-            longitude = (String)arg0[2];
-            username = (String)arg0[3];
-            String link = "http://ec2-18-219-194-235.us-east-2.compute.amazonaws.com/"+file+".php?lat="+latitude+"&long="+longitude+"&username="+username;
+            String link = "http://ec2-18-219-194-235.us-east-2.compute.amazonaws.com/"+file+".php?username="+userName;
 
             URL url = new URL(link);
             HttpClient client = new DefaultHttpClient();
@@ -81,26 +80,26 @@ public class NearbyActivity extends AsyncTask<String, String, Void> {
             signInfo = sb.toString();
 
 
-                JSONObject reader = new JSONObject(signInfo);
-                JSONArray signs = reader.getJSONArray("signs");
+            JSONObject reader = new JSONObject(signInfo);
+            JSONArray signs = reader.getJSONArray("signs");
 
-                for(int j = 0; j < signs.length(); j++) {
-                    JSONObject c = signs.getJSONObject(j);
-                    String title = c.getString("title");
-                    String location = c.getString("location");
-                    String text = c.getString("text");
+            for(int j = 0; j < signs.length(); j++) {
+                JSONObject c = signs.getJSONObject(j);
+                String title = c.getString("title");
+                String location = c.getString("location");
+                String text = c.getString("text");
 
-                    HashMap<String, String> sign = new HashMap<>();
+                HashMap<String, String> sign = new HashMap<>();
 
-                    sign.put("title", title);
-                    sign.put("location", location);
-                    sign.put("text", text);
+                sign.put("title", title);
+                sign.put("location", location);
+                sign.put("text", text);
 
-                    nearbyList.add(sign);
-                    //if(visitList.contains(sign) == false) {
-                        //visitList.add(sign);
-                    //}
-                }
+                visitList.add(sign);
+                //if(visitList.contains(sign) == false) {
+                //visitList.add(sign);
+                //}
+            }
 
 
 
@@ -118,17 +117,17 @@ public class NearbyActivity extends AsyncTask<String, String, Void> {
     @Override
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
-        if(nearbyList.isEmpty()) {
+        if(visitList.isEmpty()) {
             nearbyMessage.setVisibility(View.VISIBLE);
         }
         else {
-            nearbyMessage.setVisibility(View.INVISIBLE);
-            nearbyView.setAdapter(null);
-            adapter = new SimpleAdapter(context, nearbyList,
+            //nearbyMessage.setVisibility(View.INVISIBLE);
+            visitView.setAdapter(null);
+            adapter = new SimpleAdapter(context, visitList,
                     R.layout.list_item, new String[]{"title", "location"},
                     new int[]{R.id.signName, R.id.signLocation});
-            nearbyView.setAdapter(adapter);
-            MainActivity.notifyUser();
+            visitView.setAdapter(adapter);
+            //MainActivity.notifyUser();
         }
 
     }

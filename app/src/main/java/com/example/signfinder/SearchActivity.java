@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.example.signfinder.MainActivity.adapter;
+import static com.example.signfinder.MainActivity.results;
 import static com.example.signfinder.MainActivity.signList;
 import static com.example.signfinder.MainActivity.signsView;
 
@@ -56,6 +57,7 @@ public class SearchActivity extends AsyncTask<String, String, Void> {
 
             file = (String)arg0[1];
             item = (String)arg0[0];
+            item = item.replace(" ", "_");
             String link = "http://ec2-18-219-194-235.us-east-2.compute.amazonaws.com/"+file+".php?city="+item;
 
             URL url = new URL(link);
@@ -76,6 +78,8 @@ public class SearchActivity extends AsyncTask<String, String, Void> {
             }
 
             signInfo = sb.toString();
+            //char a = signInfo.charAt(4735);
+
 
             JSONObject reader = new JSONObject(signInfo);
             JSONArray signs = reader.getJSONArray("signs");
@@ -109,6 +113,12 @@ public class SearchActivity extends AsyncTask<String, String, Void> {
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
         signsView.setAdapter(null);
+        if(signList.isEmpty() == true) {
+            results.setVisibility(View.VISIBLE);
+        }
+        else {
+            results.setVisibility(View.INVISIBLE);
+        }
         adapter = new SimpleAdapter(context, signList,
                 R.layout.list_item, new String[]{"title", "location"},
                 new int[]{R.id.signName, R.id.signLocation});

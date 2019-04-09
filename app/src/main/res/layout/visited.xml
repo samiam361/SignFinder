@@ -32,8 +32,9 @@
         app:menu="@menu/navigation" />
 
     <ListView
+        android:id="@+id/visitList"
         android:layout_width="395dp"
-        android:layout_height="602dp"
+        android:layout_height="500dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
