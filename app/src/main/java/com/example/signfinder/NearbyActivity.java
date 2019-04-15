@@ -1,6 +1,7 @@
 package com.example.signfinder;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.MainThread;
 import android.support.v7.app.AppCompatActivity;
@@ -36,21 +37,23 @@ import static com.example.signfinder.MainActivity.visitList;
 
 public class NearbyActivity extends AsyncTask<String, String, Void> {
 
-    public String signInfo, latitude, longitude, file, username;
+    public String signInfo, latitude, longitude, file, username, radius;
     private Context context;
+    private double latlongMod;
 
+
+    //default constructor
     public NearbyActivity() {
 
     }
 
+    //constructor
     public NearbyActivity(Context context) {
         this.context = context;
     }
 
-    protected void onPreExecute() {
 
-    }
-
+    //Queries the database with the user's location and returns a JSON file with all signs in the search radius
     @Override
     protected Void doInBackground(String... arg0) {
         try {
@@ -59,7 +62,29 @@ public class NearbyActivity extends AsyncTask<String, String, Void> {
             latitude = (String)arg0[1];
             longitude = (String)arg0[2];
             username = (String)arg0[3];
-            String link = "http://ec2-18-219-194-235.us-east-2.compute.amazonaws.com/"+file+".php?lat="+latitude+"&long="+longitude+"&username="+username;
+            radius = (String)arg0[4];
+
+
+            /*
+                Gets the user specified search radius
+             */
+            if(radius.equals("1")) {
+                latlongMod = 0.00724;
+            }
+            else if(radius.equals("2")) {
+                latlongMod = 0.0145;
+            }
+            else if(radius.equals("3")) {
+                latlongMod = 0.0289;
+            }
+            else {
+                latlongMod = 0.0724;
+            }
+
+            /*
+                This block of code communicates with the server and the database
+             */
+            String link = "http://ec2-18-219-194-235.us-east-2.compute.amazonaws.com/"+file+".php?lat="+latitude+"&long="+longitude+"&username="+username+"&mod="+latlongMod;
 
             URL url = new URL(link);
             HttpClient client = new DefaultHttpClient();
@@ -80,7 +105,7 @@ public class NearbyActivity extends AsyncTask<String, String, Void> {
 
             signInfo = sb.toString();
 
-
+                //Convert JSON to a hashmap of strings and adds these to a list
                 JSONObject reader = new JSONObject(signInfo);
                 JSONArray signs = reader.getJSONArray("signs");
 
@@ -97,9 +122,6 @@ public class NearbyActivity extends AsyncTask<String, String, Void> {
                     sign.put("text", text);
 
                     nearbyList.add(sign);
-                    //if(visitList.contains(sign) == false) {
-                        //visitList.add(sign);
-                    //}
                 }
 
 
@@ -115,11 +137,15 @@ public class NearbyActivity extends AsyncTask<String, String, Void> {
 
     }
 
+
+    //Depending on the contents of the list from the last method, this displays the list or a message
     @Override
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
+
         if(nearbyList.isEmpty()) {
             nearbyMessage.setVisibility(View.VISIBLE);
+            nearbyView.setAdapter(null);
         }
         else {
             nearbyMessage.setVisibility(View.INVISIBLE);
@@ -128,7 +154,10 @@ public class NearbyActivity extends AsyncTask<String, String, Void> {
                     R.layout.list_item, new String[]{"title", "location"},
                     new int[]{R.id.signName, R.id.signLocation});
             nearbyView.setAdapter(adapter);
-            MainActivity.notifyUser();
+            if(MainActivity.notifOn == true) {
+                MainActivity.notifyUser();
+            }
+
         }
 
     }

@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,6 +15,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -49,6 +51,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static android.view.View.INVISIBLE;
+import static com.example.signfinder.LoginActivity.editor;
+//import static com.example.signfinder.SettingsActivity.editor;
+
+/*
+    The main activity hold the main functionality of the code.
+ */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,23 +66,33 @@ public class MainActivity extends AppCompatActivity {
     public static Spinner searchSpin, optionsSpin;
     public static ListAdapter adapter;
     public BottomNavigationView navigation;
-    private int nav;
+    private SharedPreferences sp;
+    private int nav, radius;
+    public static boolean notifOn, stayLoggedOn = false;
     public static int listPos, listID;
     public double latitude, longitude, newLat, newLong;
     public static Context context;
     private LocationManager locMan;
     public SearchView searchbar;
-    public static String userName = "";
+    public static String userName, radValue = "";
     public static ArrayList<HashMap<String, String>> nearbyList = new ArrayList<HashMap<String, String>>();
     public static ArrayList<HashMap<String, String>> signList = new ArrayList<HashMap<String, String>>();
     public static ArrayList<HashMap<String, String>> visitList = new ArrayList<HashMap<String, String>>();
 
+    /*
+        This function deals with the bottom navigation tabs.
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
+                /*
+                    Nearby tab. Calls locationHelp() to find signs and displays the list or says
+                    there are no signs near..
+                    Notifies the user if that setting is on.
+                 */
                 case R.id.navigation_home:
                     listID = 1;
                     mTextMessage.setText(R.string.title_nearby);
@@ -85,7 +103,10 @@ public class MainActivity extends AppCompatActivity {
                     locationHelper();
                     if(nearbyList.isEmpty() == false) {
                         listPos = 0;
-                        notifyUser();
+                        if(notifOn == true) {
+                            notifyUser();
+                        }
+
                     }
                     else {
                         nearbyMessage = (TextView) findViewById(R.id.nearbyMessage);
@@ -95,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
                     nearbyHelp(nearbyList, nearbyView);
                     clickListen(nearbyView);
                     return true;
+                    /*
+                        Visited tab. Starts the visit activity and displays the list.
+                     */
                 case R.id.navigation_dashboard:
                     listID = 2;
                     mTextMessage.setText(R.string.title_visited);
@@ -105,6 +129,9 @@ public class MainActivity extends AppCompatActivity {
                     new VisitActivity(getApplicationContext()).execute("db_visit", userName);
                     clickListen(visitView);
                     return true;
+                /*
+                    Search tab. Calls searchHelp() on user input.
+                 */
                 case R.id.navigation_notifications:
                     listID = 3;
                     mTextMessage.setText(R.string.title_search);
@@ -127,23 +154,31 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-
+    /*
+        Handles all of the search capability.
+     */
     public void searchHelp() {
         popSearchSpinner();
         searchSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            /*
+                Provides different functionality depending on which item is chosen from the first spinner.
+             */
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 String item = adapterView.getItemAtPosition(position).toString();
+                //Populates the second spinner with county/city options
                 if(item.equals("City/County")) {
                     searchbar.setVisibility(INVISIBLE);
                     keymessage.setText("Select a County/City.");
                     popCitySpin(R.array.city_county_options, "db_citySearch");
                 }
+                //populates the second spinner with district options
                 else if(item.equals("District")) {
                     searchbar.setVisibility(INVISIBLE);
                     keymessage.setText("Select a District.");
                     popCitySpin(R.array.district_options, "db_districtSearch");
                 }
+                //Enables the search bar and calls callSearch on submit
                 else if(item.equals("Keyword")) {
                     searchbar.setVisibility(View.VISIBLE);
                     keymessage.setText("Enter a single keyword.");
@@ -161,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
                             return true;
                         }
 
+                        //Starts the search activity with the entered text as a parameter
                         public void callSearch(String query) {
                             new SearchActivity(getApplicationContext()).execute(query, "db_titleSearch");
                         }
@@ -175,9 +211,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /*
+        Updates the list adapter with contents of the nearby list without getting locations
+     */
     public void nearbyHelp(ArrayList<HashMap<String, String>> list, ListView view) {
         if(list.isEmpty()) {
-            //nearbyMessage.setVisibility(View.VISIBLE);
+            nearbyMessage.setVisibility(View.VISIBLE);
         }
         else {
             view.setAdapter(null);
@@ -188,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Populates the first spinner
     public void popSearchSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.search_options, android.R.layout.simple_spinner_item);
@@ -198,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Populates the second spinner
     public void popCitySpin(int spinID, String file) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 spinID, android.R.layout.simple_spinner_item);
@@ -211,9 +252,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 String item = adapterView.getItemAtPosition(position).toString();
-                //getSigns(item, 0);
                 new SearchActivity(getApplicationContext()).execute(item, fileName);
-                //adapter = new SimpleAdapter(getApplicationContext(), signList, android.R.layout.simple_list_item_1, new String[] {"title", "text"}, new int[] {android.R.id.text1, android.R.id.text2});
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -223,6 +262,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Pushes notifications when the nearby list has signs
     public static void notifyUser() {
         // Create an explicit intent for an Activity in your app
         Intent intent = new Intent(context, SignClickActivity.class);
@@ -246,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Item select listener for the options menu item on the main activity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
@@ -256,16 +297,18 @@ public class MainActivity extends AppCompatActivity {
                 aboutActivity();
                 return true;
             case R.id.logout:
+                editor.putString("username_setting", " ");
+                editor.commit();
                 loginActivity();
                 return true;
         }
         return false;
     }
 
+    //Gets the user's location and starts the nearby activity with lat and long as parameters
     public void locationHelper() {
         // Acquire a reference to the system Location Manager
         locMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
         // Define a listener that responds to location updates
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
@@ -274,7 +317,9 @@ public class MainActivity extends AppCompatActivity {
                 if(newLat != latitude && newLong != longitude) {
                     latitude = newLat;
                     longitude = newLong;
-                    new NearbyActivity(getApplicationContext()).execute("db_nearby", Double.toString(latitude), Double.toString(longitude), userName);
+                    radValue = sp.getString("search_radius", "1");
+                    notifOn = sp.getBoolean("notifications_switch", true);
+                    new NearbyActivity(getApplicationContext()).execute("db_nearby", Double.toString(latitude), Double.toString(longitude), userName, radValue);
                 }
 
                 return;
@@ -304,12 +349,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Uses the results of permission requests for location
     @Override
     public void onRequestPermissionsResult(int request, String[] permissions,int[] grantresults){
         switch(request) {
             case 1:
                 if(grantresults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                    locationHelper();
                 }
                 else{
 
@@ -317,22 +363,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    //Starts the about activity
     public void aboutActivity() {
         Intent startAboutAct = new Intent(this, AboutActivity.class);
         startActivity(startAboutAct);
     }
 
+    //starts the settings activity
     public void settingsActivity() {
         Intent startSettingsAct = new Intent(this, SettingsActivity.class);
         startActivity(startSettingsAct);
     }
 
+    //Starts the logInActivity
     public void loginActivity() {
         Intent startLogAct = new Intent(this, LoginActivity.class);
         startActivity(startLogAct);
     }
 
+    //Populates the options menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -340,11 +389,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //sets up the bottom navigation tabs
     public void navSetUp() {
         navigation = (BottomNavigationView) findViewById(nav);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
+    //listener for when sings are clicked from in any list view
     public void clickListen(ListView listView) {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -355,6 +406,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //creates the notifications channel
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -371,11 +423,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void settingsHelp() {
+        sp = getSharedPreferences("", Context.MODE_PRIVATE);
+    }
 
+
+    //Main activity onCreate. Always starts on the nearby tab so this calls locationHelp()
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        settingsHelp();
 
         createNotificationChannel();
         context = this;

@@ -41,18 +41,18 @@ public class VisitActivity extends AsyncTask<String, String, Void> {
     public String signInfo, latitude, longitude, file;
     private Context context;
 
+    //default constructor
     public VisitActivity() {
 
     }
 
+    //constructor
     public VisitActivity(Context context) {
         this.context = context;
     }
 
-    protected void onPreExecute() {
 
-    }
-
+    //This class works the sam way as the nearby class with different parameters
     @Override
     protected Void doInBackground(String... arg0) {
         try {

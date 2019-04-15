@@ -61,6 +61,20 @@
         <item>Staunton</item>
     </string-array>
 
+    <string-array name="search_radius">
+        <item>0.5 miles</item>
+        <item>1 mile</item>
+        <item>2 miles</item>
+        <item>5 miles</item>
+    </string-array>
+
+    <string-array name="search_radius_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
     <string-array name="city_county_options">
         <item>Accomack</item>
         <item>Albemarle</item>

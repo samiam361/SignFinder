@@ -35,18 +35,19 @@ public class SearchActivity extends AsyncTask<String, String, Void> {
     public String signInfo, item, file;
     private Context context;
 
+    //default constructor
     public SearchActivity() {
 
     }
 
+    //constructor
     public SearchActivity(Context context) {
         this.context = context;
     }
 
-    protected void onPreExecute() {
 
-    }
-
+    //handles querying the database with the user specified search criteria
+    //this entire class works the same way as the nearyby class with different parameters
     @Override
     protected Void doInBackground(String... arg0) {
         try {

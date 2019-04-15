@@ -8,5 +8,25 @@
     tools:context=".SettingsActivity">
 
 
-
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="notifications_switch"
+        android:title="Notifications" />
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/search_radius"
+        android:entryValues="@array/search_radius_values"
+        android:key="search_radius"
+        android:title="Search Radius" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="stay_logged"
+        android:title="Stay Logged In" />
+    <EditTextPreference
+        android:defaultValue=" "
+        android:key="username_setting"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:visibility="invisible"
+        android:title="Edit text preference" />
 </PreferenceScreen>
